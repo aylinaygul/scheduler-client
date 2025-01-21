@@ -1,5 +1,5 @@
 {
-  "name": "nurse-scheduler-client",
+  "name": "scheduler-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
