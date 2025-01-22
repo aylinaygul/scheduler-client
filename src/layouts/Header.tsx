@@ -1,63 +1,25 @@
-import React from "react";
-import { IconButton, Toolbar, Typography, styled } from '@mui/material';
-import MuiAppBar from '@mui/material/AppBar';
-import MenuIcon from '@mui/icons-material/Menu';
-
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-    // @ts-ignore
-})(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        width: `100%`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
+import React from 'react';
+import { CssBaseline, AppBar, Toolbar, IconButton, Box } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export default function Header() {
-    const [isDrawerOpen, setDrawerOpen] = React.useState(false);
-
-    const toggleDrawer = () => {
-        setDrawerOpen(!isDrawerOpen);
-    };
-
     return (
-        <React.Fragment>
-            <AppBar position="absolute"
-                // @ts-ignore
-                open={isDrawerOpen}>
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer}
-                        sx={{
-                            marginRight: '36px'
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        component="h1"
-                        variant="h6"
-                        color="inherit"
-                        noWrap
-                        sx={{ flexGrow: 1 }}
-                    >
-                        Nurse Scheduler
-                    </Typography>
+        <>
+            <CssBaseline />
+            <AppBar position="static" color="transparent" elevation={0}>
+                <Toolbar sx={{ gap: 1 }}>
+                    <IconButton size="large"><HomeIcon /></IconButton>
+                    <IconButton size="large"><ArrowBackIcon /></IconButton>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <IconButton size="large"><NotificationsIcon /></IconButton>
+                    <IconButton size="large"><SearchIcon /></IconButton>
+                    <IconButton size="large"><SettingsIcon /></IconButton>
                 </Toolbar>
             </AppBar>
-        </React.Fragment>
+        </>
     );
-};
+}

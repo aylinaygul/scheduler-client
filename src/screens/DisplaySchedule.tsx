@@ -9,9 +9,6 @@ import {
     TextField,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import dayjs from 'dayjs';
 
 function DisplaySchedule() {
@@ -30,10 +27,16 @@ function DisplaySchedule() {
         ],
     };
 
-    const formattedDate = selectedDate.format('YYYY-MM-DD');
-    const events = scheduleData[formattedDate]?.filter((event) =>
-        event.responsible.toLowerCase().includes(searchName.toLowerCase())
-    ) || [];
+    const startOfMonth = selectedDate.startOf('month');
+    const endOfMonth = selectedDate.endOf('month');
+    const daysInMonth = endOfMonth.date();
+
+    const eventsForDate = (date) => {
+        const formattedDate = date.format('YYYY-MM-DD');
+        return scheduleData[formattedDate]?.filter((event) =>
+            event.responsible.toLowerCase().includes(searchName.toLowerCase())
+        ) || [];
+    };
 
     const handleDayClick = (date) => {
         setSelectedDate(date);
@@ -43,71 +46,81 @@ function DisplaySchedule() {
     const handleCloseModal = () => setOpenModal(false);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container
-                direction={'column'}
-                sx={{
-                    display: 'flex',
-                    minHeight: '100vh',
-                    p: 4,
-                    bgcolor: '#f5f5f5',
-                }}
-            >
-                <Grid size={12}>
-                    <Typography variant="h4" gutterBottom>
-                        Schedule Viewer
-                    </Typography>
-                </Grid>
-                <Grid size={12}>
-                    <TextField
-                        label="Search by Name"
-                        variant="outlined"
-                        value={searchName}
-                        onChange={(e) => setSearchName(e.target.value)}
-                        sx={{ mb: 2, width: '100%', maxWidth: 400 }}
-                    />
-                </Grid>
-
-                <Grid size={12}>
-
-                    <StaticDatePicker
-                        displayStaticWrapperAs="desktop"
-                        value={selectedDate}
-                        onChange={(newValue) => handleDayClick(newValue)}
-                        slotProps={{
-                            day: (props) => {
-                                const day = props.day;
-                                const dayEvents = scheduleData[day.format('YYYY-MM-DD')] || [];
-                                const filteredEvents = dayEvents.filter((event) =>
-                                    event.responsible.toLowerCase().includes(searchName.toLowerCase())
-                                );
-                                return {
-                                    sx: {
-                                        position: 'relative',
-                                        '&:after': filteredEvents.length > 0 && {
-                                            content: `"${filteredEvents.length}"`,
-                                            fontSize: '0.50rem',
-                                            color: 'white',
-                                            backgroundColor: 'red',
-                                            borderRadius: '50%',
-                                            width: '10px',
-                                            height: '10px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            position: 'absolute',
-                                            top: 2,
-                                            right: 2,
-                                        },
-                                    },
-                                };
-                            },
-                        }}
-                        sx={{ width: '100%', maxWidth: 600, bgcolor: 'white', p: 2, borderRadius: 2 }}
-                    />
-                </Grid>
-
+        <Grid container
+            direction={'column'}
+            sx={{
+                display: 'flex',
+                minHeight: '100vh',
+                p: 4,
+                bgcolor: '#f5f5f5',
+            }}
+        >
+            <Grid size={12}>
+                <Typography variant="h4" gutterBottom>
+                    Schedule Viewer
+                </Typography>
             </Grid>
+            <Grid size={12}>
+                <TextField
+                    label="Search by Name"
+                    variant="outlined"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                    sx={{ mb: 2, width: '100%', maxWidth: 400 }}
+                />
+            </Grid>
+
+            <Grid size={12}>
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(7, 1fr)',
+                        gap: 2,
+                        bgcolor: 'white',
+                        p: 2,
+                        borderRadius: 2,
+                    }}
+                >
+                    {Array.from({ length: daysInMonth }, (_, i) => {
+                        const date = startOfMonth.add(i, 'day');
+                        const dayEvents = eventsForDate(date);
+
+                        return (
+                            <Box
+                                key={i}
+                                sx={{
+                                    p: 1,
+                                    border: '1px solid #ccc',
+                                    borderRadius: 2,
+                                    textAlign: 'center',
+                                    cursor: 'pointer',
+                                    position: 'relative',
+                                    bgcolor: dayEvents.length > 0 ? '#e8f5e9' : 'white',
+                                    '&:hover': { bgcolor: '#f1f1f1' },
+                                }}
+                                onClick={() => handleDayClick(date)}
+                            >
+                                <Typography variant="body2">{date.format('D')}</Typography>
+                                {dayEvents.length > 0 && (
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            position: 'absolute',
+                                            bottom: 4,
+                                            right: 4,
+                                            color: 'green',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {dayEvents.length} Event{dayEvents.length > 1 ? 's' : ''}
+                                    </Typography>
+                                )}
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </Grid>
+
             <Modal open={openModal} onClose={handleCloseModal}>
                 <Box
                     sx={{
@@ -126,9 +139,9 @@ function DisplaySchedule() {
                         Events for {selectedDate.format('MMMM DD, YYYY')}
                     </Typography>
 
-                    {events.length > 0 ? (
+                    {eventsForDate(selectedDate).length > 0 ? (
                         <List>
-                            {events.map((event, index) => (
+                            {eventsForDate(selectedDate).map((event, index) => (
                                 <ListItem key={index}>
                                     <ListItemText
                                         primary={event.task}
@@ -142,7 +155,7 @@ function DisplaySchedule() {
                     )}
                 </Box>
             </Modal>
-        </LocalizationProvider>
+        </Grid>
     );
 }
 

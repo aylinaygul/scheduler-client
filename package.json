@@ -1,6 +1,5 @@
 {
   "name": "scheduler-client",
-  "homepage": "https://aylinaygul.github.io/scheduler-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,6 +8,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
+    "@mui/x-data-grid": "^7.24.0",
     "@mui/x-date-pickers": "^7.23.6",
     "@testing-library/react": "^16.2.0",
     "cra-template": "1.2.0",
