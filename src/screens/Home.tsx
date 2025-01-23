@@ -5,7 +5,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import StyledCalendar from '../components/StyledCalendar.tsx';
 import NavigationBar from '../components/NavigationBar.tsx';
 
-
 import StethoscopeIcon from '@mui/icons-material/LocalHospital';
 import VirusIcon from '@mui/icons-material/BugReport';
 import SyringeIcon from '@mui/icons-material/Vaccines';
