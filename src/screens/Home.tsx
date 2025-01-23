@@ -22,7 +22,7 @@ const rows = [
 ];
 
 const options = [
-    { label: 'Typography', icon: <StethoscopeIcon sx={{ color: 'white' }} />, value: 'Stethoscope' },
+    { label: 'Typo', icon: <StethoscopeIcon sx={{ color: 'white' }} />, value: 'Stethoscope' },
     { label: 'Typography', icon: <VirusIcon sx={{ color: 'white' }} />, value: 'Virus' },
     { label: 'Typography', icon: <SyringeIcon sx={{ color: 'white' }} />, value: 'Syringe' },
     { label: 'Typography', icon: <AlarmIcon sx={{ color: 'white' }} />, value: 'Alarm' },
