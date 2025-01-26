@@ -10,9 +10,10 @@ function App() {
       <Routes>
         <Route path='' element={<MainLayout />}>
           <Route path='/home' element={<Home />} /> 
-          <Route path='/login' element={<Login />} />
           <Route path='/' element={<Navigate to='/home' />} />
         </Route>
+        <Route path='/login' element={<Login />} />
+    
       </Routes>
     </BrowserRouter>
 
